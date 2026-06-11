@@ -1,0 +1,27 @@
+:::writing{variant="document" id="58241"} name: Build Geode Mod
+on: push: workflow_dispatch:
+jobs: build: runs-on: ubuntu-latest
+steps:
+  - uses: actions/checkout@v4
+
+  - name: Install CMake
+    uses: lukka/get-cmake@latest
+
+  - name: Clone Geode SDK
+    run: |
+      git clone --recursive https://github.com/geode-sdk/geode.git
+
+  - name: Configure
+    run: |
+      cmake -B build -S . -DGEODE_SDK_PATH=geode
+
+  - name: Build
+    run: |
+      cmake --build build --config Release -j2
+
+  - name: Upload Artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: geode-build
+      path: build
+:::
